@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Space Journey</title>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* 🌌 Background layers */
+body {
+  background:
+    url("image/planet.png") no-repeat center center fixed,
+    url("image/starfield.gif") no-repeat center center fixed;
+  background-size: cover, 60%;
+  background-position: center, center;
+  transition: background 0.6s ease;
+}
+
+/* 🎵 Volume button */
+#volumeButton {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  width: 100px;
+  height: auto;
+  cursor: pointer;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+#volumeButton:hover {
+  transform: rotate(20deg) scale(1.2);
+}
+
+/* ⬅️➡️ Arrows */
+.arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 90;
+}
+.arrow:hover {
+  transform: translateY(-50%) scale(1.15);
+}
+#arrowLeft { left: 5%; }
+#arrowRight { right: 5%; }
+
+/* ☕ Coffee image */
+#coffee {
+  position: fixed;
+  bottom: 2%;
+  left: 52%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: auto;
+  z-index: 60;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: none;
+}
+#coffee:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* 🖼️ Frame image */
+#frame {
+  position: fixed;
+  top: 31%;
+  left: 29%;
+  width: 220px;
+  height: auto;
+  z-index: 61;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: none;
+}
+#frame:hover {
+  transform: scale(1.05);
+}
+
+/* 💖 Love image (center of planet page) */
+/* This is the static centered "landing page" image */
+#love {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 180px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 70;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: block; /* only on planet scene */
+}
+#love:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* ☕ Coffee overlay + 🖼️ Frame overlay + 💖 Love overlay */
+#coffeeOverlay, #frameOverlay, #loveOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 200;
+}
+#coffeeOverlay.show, #frameOverlay.show, #loveOverlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Centered overlay container for all overlays */
+.overlay-container {
+  position: relative;
+  width: 60%;
+  max-width: 700px;
+  perspective: 1000px;
+}
+
+/* All overlay images */
+.overlay-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  transition: transform 0.8s ease, opacity 1s ease;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+/* Frame flipping logic */
+#framePhotoBack {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+.flipped #framePhoto {
+  transform: rotateY(180deg);
+}
+.flipped #framePhotoBack {
+  transform: rotateY(0deg);
+}
+
+/* ☕ Coffee fortune fade-in */
+#coffeeZoomFortune {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+#coffeeZoomFortune.show {
+  opacity: 1;
+}
+
+/* 💿 Record player */
+#record {
+  position: fixed;
+  top: 26%;
+  right: 15%;
+  width: 200px;
+  height: auto;
+  z-index: 65;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: none;
+}
+#recordHover {
+  position: fixed;
+  top: 26%;
+  right: 15%;
+  width: 200px;
+  height: auto;
+  z-index: 66;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+#recordHover.show {
+  opacity: 1;
+}
+
+/* ----------------------------
+   Love overlay images (fixed)
+   Use same pattern as frame/coffee:
+   - #loveHi2 is normal flow image (gives container height)
+   - #loveHi3 is absolute on top and fades in
+   ---------------------------- */
+
+/* make the primary hi2 image a normal flow element so overlay-container gets a height */
+#loveHi2 {
+  /* remove absolute positioning so it sizes the container like other overlays */
+  position: static;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+/* the hi3 image sits on top and fades in */
+#loveHi3 {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+#loveHi3.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* 🌑 Page fade-in effect */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: black;
+  opacity: 1;
+  z-index: 9999;
+  pointer-events: none;
+  animation: fadeInScene 3s ease forwards;
+}
+
+@keyframes fadeInScene {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ☕ Coffee -->
+<img src="image/coffee.png" alt="Coffee" id="coffee" />
+
+<!-- 🖼️ Frame -->
+<img src="image/frame.png" alt="Photo Frame" id="frame" />
+
+<!-- 💖 Love image (center of planet page) -->
+<img src="image/love.png" alt="Love" id="love" />
+
+<!-- ☕ Coffee overlay -->
+<div id="coffeeOverlay">
+  <div class="overlay-container">
+    <img src="image/coffeezoom.png" alt="Coffee Zoom" id="coffeeZoomImg" />
+    <img src="image/coffeezoomfortune.png" alt="Coffee Fortune" id="coffeeZoomFortune" />
+  </div>
+</div>
+
+<!-- 🖼️ Frame overlay (flipping effect) -->
+<div id="frameOverlay">
+  <div class="overlay-container" id="frameContainer">
+    <img src="image/framephoto.png" alt="Frame Photo" id="framePhoto" />
+    <img src="image/framephotoback.png" alt="Frame Photo Back" id="framePhotoBack" />
+  </div>
+</div>
+
+<!-- 💖 Love overlay -->
+<div id="loveOverlay">
+  <div class="overlay-container">
+    <!-- Primary image is normal flow (so container has height and centers correctly) -->
+    <img src="image/hi2.png" alt="Hi 2" id="loveHi2" />
+    <!-- Secondary image sits absolutely on top and fades in -->
+    <img src="image/hi3.png" alt="Hi 3" id="loveHi3" />
+  </div>
+</div>
+
+<!-- 💿 Record player -->
+<img src="image/record.png" alt="Record Player" id="record" />
+<img src="image/recordplay.png" alt="Record Playing" id="recordHover" />
+
+<!-- 🎵 Volume -->
+<img src="image/musicnote-muted.png" alt="Volume Button" id="volumeButton" />
+
+<!-- ⬅️➡️ Arrows -->
+<img src="image/arrowleft.png" alt="Left Arrow" id="arrowLeft" class="arrow" />
+<img src="image/arrowright.png" alt="Right Arrow" id="arrowRight" class="arrow" />
+
+<!-- 🔊 Audio -->
+<audio id="backgroundMusic" src="image/ambiance.mp3" preload="auto" loop></audio>
+<audio id="scrollSound" src="image/scroll.mp3" preload="auto"></audio>
+<audio id="magicSound" src="image/magic.mp3" preload="auto"></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const backgroundMusic = document.getElementById("backgroundMusic");
+  const scrollSound = document.getElementById("scrollSound");
+  const magicSound = document.getElementById("magicSound");
+  const volumeButton = document.getElementById("volumeButton");
+  const arrowRight = document.getElementById("arrowRight");
+  const arrowLeft = document.getElementById("arrowLeft");
+  const coffee = document.getElementById("coffee");
+  const coffeeOverlay = document.getElementById("coffeeOverlay");
+  const coffeeZoomFortune = document.getElementById("coffeeZoomFortune");
+  const record = document.getElementById("record");
+  const recordHover = document.getElementById("recordHover");
+  const frame = document.getElementById("frame");
+  const frameOverlay = document.getElementById("frameOverlay");
+  const frameContainer = document.getElementById("frameContainer");
+  const love = document.getElementById("love");
+  const loveOverlay = document.getElementById("loveOverlay");
+  const loveHi2 = document.getElementById("loveHi2");
+  const loveHi3 = document.getElementById("loveHi3");
+
+  let isMuted = true;
+  let currentScene = "planet";
+  let fortuneTimer = null;
+  let loveStage = 0;
+
+  backgroundMusic.volume = 0.6;
+  backgroundMusic.loop = true;
+  backgroundMusic.muted = isMuted;
+
+  function startMusicOnce() {
+    backgroundMusic.play().catch(err => console.warn("Play blocked:", err));
+    document.removeEventListener("click", startMusicOnce);
+  }
+  document.addEventListener("click", startMusicOnce);
+
+  // 🔊 Toggle mute/unmute
+  volumeButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    isMuted = !isMuted;
+    backgroundMusic.muted = isMuted;
+    scrollSound.muted = isMuted;
+    magicSound.muted = isMuted;
+    volumeButton.src = isMuted ? "image/musicnote-muted.png" : "image/musicnote.png";
+    if (!isMuted) backgroundMusic.play().catch(() => {});
+  });
+
+  // 🌍 Scene switching
+  function changeScene(scene) {
+    if (scene === "livingroom" && currentScene !== "livingroom") {
+      document.body.style.background = `
+        url("image/livingroom.png") no-repeat center center fixed,
+        url("image/starfield.gif") no-repeat center center fixed
+      `;
+      document.body.style.backgroundSize = "cover, 60%";
+      document.body.style.backgroundPosition = "center, center";
+      love.style.display = "none";
+      setTimeout(() => {
+        coffee.style.display = "block";
+        record.style.display = "block";
+        frame.style.display = "block";
+      }, 300);
+      currentScene = "livingroom";
+    } else if (scene === "planet" && currentScene !== "planet") {
+      document.body.style.background = `
+        url("image/planet.png") no-repeat center center fixed,
+        url("image/starfield.gif") no-repeat center center fixed
+      `;
+      document.body.style.backgroundSize = "cover, 60%";
+      coffee.style.display = "none";
+      record.style.display = "none";
+      frame.style.display = "none";
+      love.style.display = "block";
+      recordHover.classList.remove("show");
+      currentScene = "planet";
+    }
+  }
+
+  arrowRight.addEventListener("click", () => changeScene("livingroom"));
+  arrowLeft.addEventListener("click", () => changeScene("planet"));
+
+  // ☕ Coffee overlay + magic sound
+  coffee.addEventListener("click", (e) => {
+    e.stopPropagation();
+    coffeeOverlay.classList.add("show");
+    coffeeZoomFortune.classList.remove("show");
+    clearTimeout(fortuneTimer);
+    if (!isMuted) {
+      magicSound.currentTime = 0;
+      magicSound.play().catch(err => console.warn("Magic sound blocked:", err));
+    }
+    fortuneTimer = setTimeout(() => {
+      coffeeZoomFortune.classList.add("show");
+    }, 1000);
+  });
+
+  // 🖼️ Frame overlay
+  frame.addEventListener("click", (e) => {
+    e.stopPropagation();
+    frameContainer.classList.remove("flipped");
+    frameOverlay.classList.add("show");
+  });
+  frameContainer.addEventListener("click", (e) => {
+    e.stopPropagation();
+    frameContainer.classList.toggle("flipped");
+  });
+
+  // 💖 Love overlay (multi-step)
+  love.addEventListener("click", (e) => {
+    e.stopPropagation();
+    // open the overlay, ensure hi2 visible and hi3 hidden
+    loveOverlay.classList.add("show");
+    loveHi2.style.opacity = "1";
+    loveHi3.classList.remove("show");
+    loveHi3.style.opacity = "0";
+    loveStage = 1;
+  });
+
+  // Clicking anywhere on the love overlay advances stages:
+  // stage 1 -> fade hi3 in (stage 2)
+  // stage 2 -> close overlay (back to normal)
+  loveOverlay.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (loveStage === 1) {
+      // show hi3 by adding the class which controls opacity
+      loveHi3.classList.add("show");
+      loveStage = 2;
+    } else if (loveStage === 2) {
+      // close everything
+      loveOverlay.classList.remove("show");
+      loveHi3.classList.remove("show");
+      loveHi3.style.opacity = "0";
+      loveStage = 0;
+    }
+  });
+
+  // Close overlays (shared)
+  function closeOverlay() {
+    coffeeOverlay.classList.remove("show");
+    frameOverlay.classList.remove("show");
+    loveOverlay.classList.remove("show");
+    clearTimeout(fortuneTimer);
+    coffeeZoomFortune.classList.remove("show");
+    frameContainer.classList.remove("flipped");
+    // reset love stage & hi3
+    loveHi3.classList.remove("show");
+    loveHi3.style.opacity = "0";
+    loveStage = 0;
+  }
+  coffeeOverlay.addEventListener("click", closeOverlay);
+  frameOverlay.addEventListener("click", closeOverlay);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeOverlay(); });
+
+  // 💿 Record hover + click
+  record.addEventListener("mouseenter", () => recordHover.classList.add("show"));
+  record.addEventListener("mouseleave", () => recordHover.classList.remove("show"));
+  recordHover.addEventListener("mouseenter", () => recordHover.classList.add("show"));
+  recordHover.addEventListener("mouseleave", () => recordHover.classList.remove("show"));
+  record.addEventListener("click", () => window.location.href = "playlist.html");
+  recordHover.addEventListener("click", () => window.location.href = "playlist.T");
+});
+</script>
+</body>
+</html>

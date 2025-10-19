@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title> my lover, gio </title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+* {
+  font-family: "Roboto", sans-serif;
+  color: #8b8d8f;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 10%;
+  margin: 0;
+  overflow: hidden;
+  z-index: 0;
+  background: url(image/starlight.gif);
+}
+
+/* overlay */
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4); /* adjust 0.4 for darkness */
+  z-index: 01;
+}
+.player {
+  height: 590px;
+  width: 387px;
+  border-radius: 40px;
+  background: linear-gradient(to bottom, #33383e 0%, #17191d 100%);
+  border: solid 2px #3e434c;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.top {
+  display: flex;
+  justify-content: center;
+  padding: 26px 30px;
+}
+
+.indicator {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #9aa0a6;
+}
+
+.small,
+.big,
+.big_play_pause {
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  background: radial-gradient(at bottom right, #292e35 0%, #292e34 80%);
+  border: none;
+  box-shadow: -7px -6px 10px 5px rgba(255, 255, 255, 0.04),
+    6px 6px 10px 5px rgb(39, 42, 47);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big,
+.big_play_pause {
+  height: 60px;
+  width: 60px;
+  box-shadow: -7px -6px 10px 5px rgba(255, 255, 255, 0.04),
+    7px 6px 10px 2px rgb(14, 15, 16);
+  background: radial-gradient(at bottom right, #17191e 0%, #1d2025 80%);
+}
+
+.big_play_pause {
+  background: radial-gradient(at top left, #6f6f6f 0%, #6f6f6f 80%);
+}
+
+.inner_button,
+.center,
+.inner_button_big,
+.playpause {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner_button {
+  height: 35px;
+  width: 35px;
+  background: radial-gradient(at top left, rgba(46, 50, 58, 1) 0%, rgba(28, 30, 35, 1) 80%);
+}
+
+.inner_button_big {
+  height: 55px;
+  width: 55px;
+  background: radial-gradient(at top left, rgb(57, 59, 64) 0%, rgb(12, 13, 16) 112%);
+}
+
+.playpause {
+  background: radial-gradient(at bottom right, #6f6f6f 0%, #6f6f6f 80%);
+  height: 55px;
+  width: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playpause img {
+  width: 36px; /* CHANGED: doubled play icon size */
+  height: 36px;
+}
+
+.center {
+  height: 220px;
+  width: 220px;
+  margin: 0 auto;
+  box-shadow: -15px -10px 16px 5px rgba(255, 255, 255, 0.04),
+    10px 10px 16px 8px rgb(24, 26, 29);
+  background: radial-gradient(at top left, rgba(28, 30, 35, 1) 0%, #131416 85%);
+  overflow: hidden;
+}
+
+.album {
+  border-radius: 50%;
+  height: 205px;
+  width: 205px;
+  object-fit: cover;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+.song_details {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px 30px 0px 30px;
+  align-items: center;
+}
+
+.slider {
+  margin: 20px auto;
+  width: 70%;
+  user-select: none;
+}
+
+.slider_bar {
+  background: #000;
+  height: 6px;
+  border-radius: 5px;
+  margin: 0 auto;
+  box-shadow: inset -2px -2px 2px 0px rgb(66, 70, 74),
+    inset 1px 1px 1px -1px rgb(0, 0, 0);
+  position: relative;
+  cursor: pointer;
+}
+
+.inner_slider_bar {
+  width: 0%;
+  height: 4px;
+  background: linear-gradient(90deg, #acacac 0%, #acacac 100%);
+  margin: 0px 1px;
+  border-radius: 5px;
+}
+
+.progress-handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  left: 0%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #acacac;
+  box-shadow: 0 0 6px acacac(11, 61, 145, 0.7);
+  display: none;
+}
+
+.time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 7px;
+  margin-bottom: 5px;
+}
+
+button img {
+  width: 22px;
+  height: 22x;
+  display: block;
+  margin: auto;
+}
+
+button {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  transform: translateY(0);
+}
+
+
+/* Active state (when clicked): quick press-down effect */
+button:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 0 5px #acacac(30, 77, 183, 0.6),
+              inset 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 420px) {
+  body { padding-left: 5%; }
+  .player { transform: scale(0.95); }
+}
+
+
+
+#vinyl {
+  position: absolute;
+  right: -35% ; /* move it off-screen a bit */
+  bottom: -75% ;/* adjust vertical positioning */
+  width: 1300px; /* big, visually impressive */
+  opacity: 1; /* subtle so it doesn’t distract */
+  z-index: 0; /* keep it behind everything */
+  pointer-events: none; /* make sure clicks go through */
+  animation: spin 8s linear infinite;
+}
+
+.player {
+  position: relative;
+  z-index: 10; /* keep player above vinyl */
+}
+#vinyl::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 60%, black 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.album, #vinyl {
+  animation-play-state: paused; /* default stopped until play */
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div class="player">
+    <div class="top">
+      <p class="indicator">PLAYING NOW</p>
+    </div>
+
+    <div class="center">
+      <img id="albumArt" class="album" src="image/cover.png" alt="cover">
+    </div>
+
+    <div class="song_details">
+      <div id="songTitle" style="font-size: 20px;">Fade Into You</div>
+      <div id="songArtist" style="margin-top: 7px;font-size: 10px;">Mazzy Star</div>
+    </div>
+
+    <div class="slider">
+      <div class="time">
+        <div id="currentTime">0:00</div>
+        <div id="totalTime">0:00</div>
+      </div>
+      <div class="slider_bar" id="sliderBar">
+        <div class="inner_slider_bar" id="progress"></div>
+        <div class="progress-handle" id="handle"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="big" id="prevBtn" title="Previous Song">
+        <div class="inner_button_big">
+          <img src="image/rewind.svg" alt="Prev">
+        </div>
+      </button>
+
+      <button class="big_play_pause" id="playPauseBtn" title="Play / Pause">
+        <div class="playpause" id="playIcon">
+          <img src="image/play.svg" id="playImg" alt="Play">
+        </div>
+      </button>
+
+      <button class="big" id="nextBtn" title="Next Song">
+        <div class="inner_button_big">
+          <img src="image/forward.svg" alt="Next">
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <audio id="audio"></audio>
+
+  <script>
+
+    const audio = document.getElementById("audio");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const playImg = document.getElementById("playImg");
+    const progress = document.getElementById("progress");
+    const handle = document.getElementById("handle");
+    const sliderBar = document.getElementById("sliderBar");
+    const currentTimeEl = document.getElementById("currentTime");
+    const totalTimeEl = document.getElementById("totalTime");
+    const songTitle = document.getElementById("songTitle");
+    const songArtist = document.getElementById("songArtist");
+    const albumArt = document.getElementById("albumArt");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const playlist = [
+      {title:"Fade Into You", artist:"Mazzy Star"},
+      {title:"Picture You", artist:"Chappell Roan"},
+      {title:"Yellow", artist:"Coldplay"},
+      {title:"Dreams", artist:"The Cranberries"},
+      {title:"When I'm Thinking About You", artist:"The Sundays"},
+      {title:"seven", artist:"Taylor Swift"},
+      {title:"Be My Angel", artist:"Mazzy Star"},
+      {title:"Francis Forever", artist:"Mitski"},
+      {title:"we fell in love in october", artist:"girl in red"},
+      {title:"champagne problems", artist:"Taylor Swift"},
+      {title:"A Certain Someone", artist:"The Sundays"},
+      {title:"You Said Something", artist:"PJ Harvey"},
+      {title:"September", artist:"Taylor Swift"},
+      {title:"Oh to Be in Love", artist:"Kate Bush"},
+      {title:"Cloud 9", artist:"Beach Bunny"},
+      {title:"This Thread Is A Green Street", artist:"The Innocence Mission"},
+      {title:"Goodnight and Go", artist:"Imogen Heap"},
+      {title:"Glue Song (feat. Clairo)", artist:"beabadoobee"},
+      {title:"Know How", artist:"Kings of Convenience"},
+      {title:"Me and My Husband", artist:"Mitski"},
+      {title:"Kiss Me", artist:"Sixpence None The Richer"},
+      {title:"Summertime", artist:"The Sundays"},
+      {title:"anything", artist:"Adrianne Lenker"},
+      {title:"You And Me", artist:"The Cranberries"},
+      {title:"Lover", artist:"Taylor Swift"}
+    ];
+
+    let index = 0;
+    let isPlaying = false;
+    let isDragging = false;
+
+    function trySetAlbumArt(songName) {
+      albumArt.src = `image/${songName}.jpeg`;
+      albumArt.onerror = function() {
+        albumArt.onerror = null;
+        albumArt.src = 'image/cover.png';
+      };
+    }
+
+    function loadSong(i) {
+      const song = playlist[i];
+      audio.src = `image/${song.title}.mp3`;
+      trySetAlbumArt(song.title);
+      songTitle.textContent = song.title;
+      songArtist.textContent = song.artist;
+      progress.style.width = '0%';
+      handle.style.left = '0%';
+      currentTimeEl.textContent = '0:00';
+      totalTimeEl.textContent = '0:00';
+    }
+
+    function updatePlayIcon(isPlayingNow) {
+      playImg.src = isPlayingNow ? "image/pause.svg" : "image/play.svg";
+    }
+
+    function playSong() {
+      audio.play();
+      isPlaying = true;
+      updatePlayIcon(true);
+    }
+
+    function pauseSong() {
+      audio.pause();
+      isPlaying = false;
+      updatePlayIcon(false);
+    }
+
+    playPauseBtn.addEventListener("click", () => {
+      isPlaying ? pauseSong() : playSong();
+    });
+
+    prevBtn.addEventListener("click", () => {
+      index = (index - 1 + playlist.length) % playlist.length;
+      loadSong(index);
+      playSong();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      index = (index + 1) % playlist.length;
+      loadSong(index);
+      playSong();
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      if (!isDragging && audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + "%";
+        handle.style.left = percent + "%";
+      }
+      if (audio.duration) {
+        const currentMins = Math.floor(audio.currentTime / 60);
+        const currentSecs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+        const totalMins = Math.floor(audio.duration / 60);
+        const totalSecs = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+        currentTimeEl.textContent = `${currentMins}:${currentSecs}`;
+        totalTimeEl.textContent = `${totalMins}:${totalSecs}`;
+      }
+    });
+
+     sliderBar.addEventListener("click", (e) => {
+      const rect = sliderBar.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      if (audio.duration) audio.currentTime = pct * audio.duration;
+    });
+
+    handle.addEventListener('mousedown', startDrag);
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('mousemove', onDrag);
+    handle.addEventListener('touchstart', startDrag, {passive:true});
+    window.addEventListener('touchend', stopDrag);
+    window.addEventListener('touchmove', onDrag, {passive:true});
+
+    function startDrag(e) {
+      isDragging = true;
+      handle.style.display = 'block';
+    }
+
+    function stopDrag(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      if (audio.duration) {
+        const rect = sliderBar.getBoundingClientRect();
+        const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+        const x = clientX - rect.left;
+        const pct = Math.max(0, Math.min(1, x / rect.width));
+        audio.currentTime = pct * audio.duration;
+      }
+    }
+
+    function onDrag(e) {
+      if (!isDragging) return;
+      const rect = sliderBar.getBoundingClientRect();
+      const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const x = clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      progress.style.width = (pct * 100) + '%';
+      handle.style.left = (pct * 100) + '%';
+      if (audio.duration) {
+        const time = pct * audio.duration;
+        const currentMins = Math.floor(time / 60);
+        const currentSecs = Math.floor(time % 60).toString().padStart(2, '0');
+        currentTimeEl.textContent = `${currentMins}:${currentSecs}`;
+      }
+    }
+
+    audio.addEventListener("ended", () => {
+      index = (index + 1) % playlist.length;
+      loadSong(index);
+      playSong();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        isPlaying ? pauseSong() : playSong();
+      } else if (e.code === 'ArrowLeft') {
+        index = (index - 1 + playlist.length) % playlist.length;
+        loadSong(index);
+        playSong();
+      } else if (e.code === 'ArrowRight') {
+        index = (index + 1) % playlist.length;
+        loadSong(index);
+        playSong();
+      }
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      if (audio.duration) {
+        const totalMins = Math.floor(audio.duration / 60);
+        const totalSecs = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+        totalTimeEl.textContent = `${totalMins}:${totalSecs}`;
+      }
+    });
+
+    sliderBar.addEventListener('mouseenter', () => { handle.style.display = 'block'; });
+    sliderBar.addEventListener('mouseleave', () => { if (!isDragging) handle.style.display = 'none'; });
+
+    albumArt.addEventListener('dblclick', () => {
+      index = (index + 1) % playlist.length;
+      loadSong(index);
+      playSong();
+    });
+
+    albumArt.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      index = (index - 1 + playlist.length) % playlist.length;
+      loadSong(index);
+      playSong();
+    });
+
+    loadSong(index);
+
+
+    function playSong() {
+  audio.play();
+  isPlaying = true;
+  updatePlayIcon(true);
+  albumArt.style.animationPlayState = 'running';
+  vinyl.style.animationPlayState = 'running';
+}
+
+function pauseSong() {
+  audio.pause();
+  isPlaying = false;
+  updatePlayIcon(false);
+  albumArt.style.animationPlayState = 'paused';
+  vinyl.style.animationPlayState = 'paused';
+}
+
+  </script>
+
+  <img id="vinyl" src="image/vinyl.png" alt="vinyl background">
+
+</body>
+</html>

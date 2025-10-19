@@ -3,165 +3,177 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Interactive Background</title>
+<title>gio</title>
 <style>
 body {
   background: url("image/bg.png") no-repeat top center;
-  background-size: contain; /* show the full image, scale to fit width */
+  background-size: contain; 
   background-position: top center;
   background-repeat: no-repeat;
   margin: 0;
 }
-  .stage{
-    position:relative;
-    width:100%;
-    max-width:100%;
-    margin:0 auto;
-    display:block;
-    line-height:0;
-  }
-  #bg {
-    display:block;
-    width:100%;
-    height:auto;
-    user-select:none;
-    -webkit-user-drag:none;
-  }
-
-  .moon {
-    position:absolute;
-    top:6%;
-    left:64%;
-    width:17vw;
-    max-width:400px;
-    transform: translate(-50%,-50%);
-    transition: transform 0.6s linear;
-    pointer-events:auto;
-  }
-  .moon:hover { transform: translate(-50%,-50%) rotate(360deg); }
-
-  .bucket, .whale {
-    position:absolute;
-    cursor:pointer;
-    pointer-events:auto;
-  }
-  .bucket {
-    top:47.5%;
-    left:50%;
-    width:20vw;
-    max-width:400px;
-    transform: translate(-50%,0);
-    transform-origin: 50% 100%;
-  }
-  .whale {
-    top:71%;       /* adjust as you like */
-    left:52%;
-    width:40vw;
-    max-width:800px;
-    transform: translate(-50%,0);
-  }
-
-  .overlay {
-    position:fixed;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(0,0,0,0.33);
-    visibility:hidden;
-    opacity:0;
-    transition:opacity .35s ease, visibility .35s;
-    z-index:40;
-  }
-  .overlay.show { visibility:visible; opacity:1; }
-
-  .overlay img {
-    width:50vw;
-    max-width:500px;
-    transform:scale(.5);
-    opacity:0;
-    transition: transform .6s cubic-bezier(.68,-.55,.27,1.55),
-                opacity .45s ease;
-    user-select:none;
-    -webkit-user-drag:none;
-  }
-  .overlay.show img { transform:scale(1); opacity:1; }
- .whale:hover {
-  transform: translate(-50%,0) scale(1.02) rotate(5deg);
-  transition: transform 0.3s ease;
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  line-height: 0;
+}
+#bg {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-
-  .bucket:hover  {
-   transform: translate(-50%,0) scale(1.009);
-  transition: transform 0.3s ease;
+.moon {
+  position: absolute;
+  top: 6%;
+  left: 64%;
+  width: 17vw;
+  max-width: 400px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.6s linear;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.moon:hover {
+  transform: translate(-50%, -50%) rotate(360deg);
 }
 
+.bucket, .whale {
+  position: absolute;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.bucket {
+  top: 47.5%;
+  left: 50%;
+  width: 20vw;
+  max-width: 400px;
+  transform: translate(-50%, 0);
+  transform-origin: 50% 100%;
+}
+.whale {
+  top: 71%;
+  left: 52%;
+  width: 40vw;
+  max-width: 800px;
+  transform: translate(-50%, 0);
+}
+
+/* Overlay styling */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.33);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease, visibility 0.35s;
+  z-index: 40;
+}
+.overlay.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.overlay img {
+  width: 50vw;
+  max-width: 500px;
+  transform: scale(0.5);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(.68,-.55,.27,1.55),
+              opacity 0.45s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.overlay.show img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Hover effects */
+.whale:hover {
+  transform: translate(-50%, 0) scale(1.02) rotate(5deg);
+  transition: transform 0.3s ease;
+}
+.bucket:hover {
+  transform: translate(-50%, 0) scale(1.009);
+  transition: transform 0.3s ease;
+}
 </style>
 </head>
 <body>
 
-<!-- audio elements: background + bubble -->
+<!-- audio elements -->
 <audio id="bg-melody" src="image/melody.mp3" loop preload="auto"></audio>
-<audio id="bg-night"  src="image/night.mp3"  loop preload="auto"></audio>
-<audio id="bubble-sound" src="image/bubble.mp3" preload="auto"></audio>\
+<audio id="bg-night" src="image/night.mp3" loop preload="auto"></audio>
+<audio id="bubble-sound" src="image/bubble.mp3" preload="auto"></audio>
 
-  <div class="stage" id="stage">
-    <img id="bg" src="image/bg.png" alt="Background">
-    <img src="image/moon.png" alt="Moon" class="moon" id="moon">
-    <img src="image/bucket.png" alt="Bucket" class="bucket" id="bucket">
-    <img src="image/whale.png" alt="Whale" class="whale" id="whale">
-  </div>
+<div class="stage" id="stage">
+  <img id="bg" src="image/bg.png" alt="Background">
+  <img src="image/moon.png" alt="Moon" class="moon" id="moon">
+  <img src="image/bucket.png" alt="Bucket" class="bucket" id="bucket">
+  <img src="image/whale.png" alt="Whale" class="whale" id="whale">
+</div>
 
-  <!-- overlays -->
-  <div class="overlay" id="overlay-heart">
-    <img src="image/heart.png" alt="Heart">
-  </div>
-  <div class="overlay" id="overlay-letter">
-    <img src="image/letter.png" alt="Letter">
-  </div>
+<!-- overlays -->
+<div class="overlay" id="overlay-heart">
+  <img src="image/heart.png" alt="Heart">
+</div>
+<div class="overlay" id="overlay-letter">
+  <img src="image/letter.png" alt="Letter">
+</div>
 
 <script>
-  const overlayHeart = document.getElementById('overlay-heart');
-  const overlayLetter = document.getElementById('overlay-letter');
+const overlayHeart = document.getElementById('overlay-heart');
+const overlayLetter = document.getElementById('overlay-letter');
+const bucket = document.getElementById('bucket');
+const whale  = document.getElementById('whale');
+const moon   = document.getElementById('moon');
 
-  const bucket = document.getElementById('bucket');
-  const whale  = document.getElementById('whale');
+// open overlays
+bucket.addEventListener('click', e => {
+  e.stopPropagation();
+  overlayHeart.classList.add('show');
+});
+whale.addEventListener('click', e => {
+  e.stopPropagation();
+  overlayLetter.classList.add('show');
+});
 
-  // open overlays
-  bucket.addEventListener('click', e => {
-    e.stopPropagation();
-    overlayHeart.classList.add('show');
-  });
-  whale.addEventListener('click', e => {
-    e.stopPropagation();
-    overlayLetter.classList.add('show');
-  });
+// go to moon.html when clicking on moon
+moon.addEventListener('click', e => {
+  e.stopPropagation();
+  window.location.href = 'moon.html';
+});
 
-  // close overlays on click anywhere
-  document.addEventListener('click', () => {
-    overlayHeart.classList.remove('show');
-    overlayLetter.classList.remove('show');
-  });
-  overlayHeart.addEventListener('click', () => overlayHeart.classList.remove('show'));
-  overlayLetter.addEventListener('click', () => overlayLetter.classList.remove('show'));
+// close overlays on click anywhere
+document.addEventListener('click', () => {
+  overlayHeart.classList.remove('show');
+  overlayLetter.classList.remove('show');
+});
+overlayHeart.addEventListener('click', () => overlayHeart.classList.remove('show'));
+overlayLetter.addEventListener('click', () => overlayLetter.classList.remove('show'));
 
-  // get audio elements
+// audio setup
 const bgMelody = document.getElementById('bg-melody');
 const bgNight  = document.getElementById('bg-night');
-const bubble    = document.getElementById('bubble-sound');
+const bubble   = document.getElementById('bubble-sound');
 
-// set gentle volumes (tweak to taste)
 bgMelody.volume = 0.05;
 bgNight.volume  = 0.28;
 
-// helper to attempt play and fall back to first user gesture if autoplay blocked
+// helper to play audio (handles autoplay block)
 function tryPlayAudio(audioEl) {
-  // small guard in case element missing
   if (!audioEl) return;
   audioEl.loop = true;
   audioEl.play().catch(() => {
-    // autoplay blocked: start on first user gesture
     const onFirstGesture = () => {
       audioEl.play().catch(()=>{});
       window.removeEventListener('click', onFirstGesture);
@@ -174,28 +186,13 @@ function tryPlayAudio(audioEl) {
   });
 }
 
-// call on load
+// start background sounds on load
 window.addEventListener('load', () => {
   tryPlayAudio(bgMelody);
   tryPlayAudio(bgNight);
 });
 
-// --- play bubble when overlays are shown ---
-// Replace/augment your existing click handlers so they also trigger the bubble sound.
-// Example: if your current handlers are:
-//
-// bucket.addEventListener('click', e => {
-//   e.stopPropagation();
-//   overlayHeart.classList.add('show');
-// });
-//
-// whale.addEventListener('click', e => {
-//   e.stopPropagation();
-//   overlayLetter.classList.add('show');
-// });
-//
-// Replace those bodies with the snippets below (keeps existing behavior + plays sound):
-
+// play bubble sound when bucket or whale clicked
 bucket.addEventListener('click', e => {
   e.stopPropagation();
   overlayHeart.classList.add('show');
@@ -207,7 +204,6 @@ whale.addEventListener('click', e => {
   overlayLetter.classList.add('show');
   if (bubble) { bubble.currentTime = 0; bubble.play().catch(()=>{}); }
 });
-
 </script>
 
 </body>
